@@ -1,0 +1,13 @@
+Makefile
+metadata.json
+icons
+/screenshots/
+nuvola-app-tidal
+eu.tiliado.NuvolaAppTidal.desktop
+eu.tiliado.NuvolaAppTidal.service
+eu.tiliado.NuvolaAppTidal.appdata.xml
+nuvola-app-tidal.metainfo.xml
+eu.tiliado.WebRuntimeAppTidal.desktop
+eu.tiliado.WebRuntimeAppTidal.service
+eu.tiliado.WebRuntimeAppTidal.appdata.xml
+nuvola-app-tidal.metainfo.xml
