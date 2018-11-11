@@ -9,7 +9,8 @@
   "api_major": 4,
   "api_minor": 13,
   "categories": "AudioVideo;Audio;",
-  "requirements": "Chromium[65] Codec[MP3] Feature[MSE]",
+  "requirements": "Chromium[65] Codec[MP3] Feature[MSE] Feature[Flash]",
+  "dark_theme": true,
   "license": "BSD-2-Clause; CC-BY-SA-3.0",
   "build": {
     "icons": [
