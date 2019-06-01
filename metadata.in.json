@@ -9,7 +9,7 @@
   "api_major": 4,
   "api_minor": 13,
   "categories": "AudioVideo;Audio;",
-  "requirements": "Chromium[65] Codec[MP3] Feature[MSE] Feature[Flash]",
+  "requirements": "Chromium[65] Codec[MP3] Feature[MSE] Feature[Widevine]",
   "dark_theme": true,
   "license": "BSD-2-Clause; CC-BY-SA-3.0",
   "build": {
