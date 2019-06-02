@@ -29,7 +29,7 @@
   var C_ = Nuvola.Translate.pgettext
   var PlaybackState = Nuvola.PlaybackState
   var PlayerAction = Nuvola.PlayerAction
-  var PLAYER = 'div[data-test-id="footer-player"]'
+  var PLAYER = 'div[data-test="footer-player"]'
   var ACTION_LIKE = 'like'
 
   var player = Nuvola.$object(Nuvola.MediaPlayer)
@@ -62,10 +62,10 @@
   WebApp.update = function () {
     var elms = this._getElements()
     var track = {
-      title: Nuvola.queryText(PLAYER + ' span[data-test-id="footer-track-title"]'),
-      artist: Nuvola.queryText(PLAYER + ' a[data-test-id="grid-item-detail-text-title-artist"]'),
+      title: Nuvola.queryText(PLAYER + ' span[data-test="footer-track-title"]'),
+      artist: Nuvola.queryText(PLAYER + ' a[data-test="grid-item-detail-text-title-artist"]'),
       album: null,
-      artLocation: Nuvola.queryAttribute(PLAYER + ' figure[data-test-id="current-media-imagery"] img', 'src'),
+      artLocation: Nuvola.queryAttribute(PLAYER + ' figure[data-test="current-media-imagery"] img', 'src'),
       length: elms.timeTotal
     }
 
@@ -155,18 +155,18 @@
   WebApp._getElements = function () {
     // Interesting elements
     var elms = {
-      play: document.querySelector('button[data-test-id="play"]'),
-      pause: document.querySelector('button[data-test-id="pause"]'),
-      next: document.querySelector('button[data-test-id="next"]'),
-      prev: document.querySelector('button[data-test-id="previous"]'),
-      repeat: document.querySelector('button[data-test-id="repeat"]'),
-      shuffle: document.querySelector('button[data-test-id="shuffle"]'),
-      progressbar: document.querySelector(PLAYER + ' div[data-test-id="interaction-layer"]'),
+      play: document.querySelector(PLAYER + ' button[data-test="play"]'),
+      pause: document.querySelector(PLAYER + ' button[data-test="pause"]'),
+      next: document.querySelector(PLAYER + ' button[data-test="next"]'),
+      prev: document.querySelector(PLAYER + ' button[data-test="previous"]'),
+      repeat: document.querySelector('button[data-test="repeat"]'),
+      shuffle: document.querySelector('button[data-test="shuffle"]'),
+      progressbar: document.querySelector(PLAYER + ' div[data-test="interaction-layer"]'),
       volumebar: document.querySelector('div[class*="volumeSlider"] input'),
       timeTotal: Nuvola.queryText(PLAYER + ' time[class^=duration]'),
       timeElapsed: Nuvola.queryText(PLAYER + ' time[class^=currentTime]')
     }
-    var elm = document.querySelector(PLAYER + ' button[data-test-id="footer-context-menu"]')
+    var elm = document.querySelector(PLAYER + ' button[data-test="footer-context-menu"]')
     elms.like = elm ? elm.nextElementSibling : null
     // Ignore disabled buttons
     for (var key in elms) {
@@ -179,14 +179,14 @@
 
   WebApp._getRepeat = function () {
     var elm = this._getElements().repeat
-    if (!elm || !elm.firstChild) {
+    if (!elm) {
       return null
     }
-    var classes = elm.firstChild.getAttribute('class')
-    if (classes.includes('once')) {
+    var classes = elm.getAttribute('class')
+    if (classes.includes('once--')) {
       return Nuvola.PlayerRepeat.TRACK
     }
-    return classes.includes('all') ? Nuvola.PlayerRepeat.PLAYLIST : Nuvola.PlayerRepeat.NONE
+    return classes.includes('all--') ? Nuvola.PlayerRepeat.PLAYLIST : Nuvola.PlayerRepeat.NONE
   }
 
   WebApp._setRepeat = function (repeat) {
@@ -197,7 +197,7 @@
 
   WebApp._getShuffle = function () {
     var elm = this._getElements().shuffle
-    return elm ? elm.firstChild.getAttribute('class').includes('shuffleIconActive') : null
+    return elm ? elm.getAttribute('class').includes('active--') : null
   }
 
   WebApp.start()
