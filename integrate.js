@@ -26,14 +26,14 @@
 
 (function (Nuvola) {
   // var log = window ? window.console.log.bind(window.console) : null
-  var C_ = Nuvola.Translate.pgettext
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
-  var PLAYER = 'div[data-test="footer-player"]'
-  var ACTION_LIKE = 'like'
+  const C_ = Nuvola.Translate.pgettext
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
+  const PLAYER = 'div[data-test="footer-player"]'
+  const ACTION_LIKE = 'like'
 
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-  var WebApp = Nuvola.$WebApp()
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
+  const WebApp = Nuvola.$WebApp()
 
   WebApp._onInitAppRunner = function (emitter) {
     Nuvola.WebApp._onInitAppRunner.call(this, emitter)
@@ -44,7 +44,7 @@
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -60,8 +60,8 @@
 
   // Extract data from the web page
   WebApp.update = function () {
-    var elms = this._getElements()
-    var track = {
+    const elms = this._getElements()
+    const track = {
       title: Nuvola.queryText(PLAYER + ' span[data-test="footer-track-title"]'),
       artist: Nuvola.queryText(PLAYER + ' a[data-test="grid-item-detail-text-title-artist"]'),
       album: null,
@@ -69,7 +69,7 @@
       length: elms.timeTotal
     }
 
-    var state
+    let state
     if (elms.pause) {
       state = PlaybackState.PLAYING
     } else if (elms.play) {
@@ -91,11 +91,11 @@
     player.updateVolume(Nuvola.queryAttribute('div[class*="volumeSlider"]', 'aria-valuenow', (volume) => volume / 100))
     player.setCanChangeVolume(!!elms.volumebar)
 
-    var repeat = this._getRepeat()
+    const repeat = this._getRepeat()
     player.setCanRepeat(repeat !== null)
     player.setRepeatState(repeat)
 
-    var shuffle = this._getShuffle()
+    const shuffle = this._getShuffle()
     player.setCanShuffle(shuffle !== null)
     player.setShuffleState(shuffle)
 
@@ -106,7 +106,7 @@
   }
 
   WebApp._onActionActivated = function (emitter, name, param) {
-    var elms = this._getElements()
+    const elms = this._getElements()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
         if (elms.play) {
@@ -134,18 +134,20 @@
       case PlayerAction.SHUFFLE:
         Nuvola.clickOnElement(elms.shuffle)
         break
-      case PlayerAction.CHANGE_VOLUME:
+      case PlayerAction.CHANGE_VOLUME: {
         // The volume value seems to be accepted only if the range input is set to
         // a non-integer floating point value so that the handler of "invalid" event is triggered.
-        var volume = Math.round(param * 100) + 0.0001
+        const volume = Math.round(param * 100) + 0.0001
         Nuvola.setInputValueWithEvent(elms.volumebar, volume)
         break
-      case PlayerAction.SEEK:
-        var total = Nuvola.parseTimeUsec(elms.timeTotal)
+      }
+      case PlayerAction.SEEK: {
+        const total = Nuvola.parseTimeUsec(elms.timeTotal)
         if (param > 0 && param <= total) {
           Nuvola.clickOnElement(elms.progressbar, param / total, 0.5)
         }
         break
+      }
       case ACTION_LIKE:
         Nuvola.clickOnElement(elms.like)
         break
@@ -154,7 +156,7 @@
 
   WebApp._getElements = function () {
     // Interesting elements
-    var elms = {
+    const elms = {
       play: document.querySelector(PLAYER + ' button[data-test="play"]'),
       pause: document.querySelector(PLAYER + ' button[data-test="pause"]'),
       next: document.querySelector(PLAYER + ' button[data-test="next"]'),
@@ -166,10 +168,10 @@
       timeTotal: Nuvola.queryText(PLAYER + ' time[class^=duration]'),
       timeElapsed: Nuvola.queryText(PLAYER + ' time[class^=currentTime]')
     }
-    var elm = document.querySelector(PLAYER + ' button[data-test="footer-context-menu"]')
+    const elm = document.querySelector(PLAYER + ' button[data-test="footer-context-menu"]')
     elms.like = elm ? elm.nextElementSibling : null
     // Ignore disabled buttons
-    for (var key in elms) {
+    for (const key in elms) {
       if (elms[key] && elms[key].disabled) {
         elms[key] = null
       }
@@ -178,11 +180,11 @@
   }
 
   WebApp._getRepeat = function () {
-    var elm = this._getElements().repeat
+    const elm = this._getElements().repeat
     if (!elm) {
       return null
     }
-    var classes = elm.getAttribute('class')
+    const classes = elm.getAttribute('class')
     if (classes.includes('once--')) {
       return Nuvola.PlayerRepeat.TRACK
     }
@@ -196,7 +198,7 @@
   }
 
   WebApp._getShuffle = function () {
-    var elm = this._getElements().shuffle
+    const elm = this._getElements().shuffle
     return elm ? elm.getAttribute('class').includes('active--') : null
   }
 
