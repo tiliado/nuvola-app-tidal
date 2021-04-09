@@ -1,6 +1,8 @@
 Tidal Change Log
 ================
 
+  * Update metadata parsing. Issue: tiliado/nuvolaplayer#721
+
 1.1 - September 28, 2020
 ------------------------
 

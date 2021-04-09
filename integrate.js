@@ -62,9 +62,9 @@
   WebApp.update = function () {
     const elms = this._getElements()
     const track = {
-      title: Nuvola.queryText(PLAYER + ' span[data-test="footer-track-title"]'),
+      title: Nuvola.queryText(PLAYER + ' div[data-test="footer-track-title"]'),
       artist: Nuvola.queryText(PLAYER + ' a[data-test="grid-item-detail-text-title-artist"]'),
-      album: null,
+      album: Nuvola.queryText(PLAYER + ' > div > div:last-child > div:nth-child(3) a'),
       artLocation: Nuvola.queryAttribute(PLAYER + ' figure[data-test="current-media-imagery"] img', 'src'),
       length: elms.timeTotal
     }
@@ -88,8 +88,7 @@
     player.setTrackPosition(elms.timeElapsed)
     player.setCanSeek(state !== PlaybackState.UNKNOWN && elms.progressbar)
 
-    player.updateVolume(Nuvola.queryAttribute('div[class*="volumeSlider"]', 'aria-valuenow', (volume) => volume / 100))
-    player.setCanChangeVolume(!!elms.volumebar)
+    player.setCanChangeVolume(false)
 
     const repeat = this._getRepeat()
     player.setCanRepeat(repeat !== null)
@@ -100,7 +99,7 @@
     player.setShuffleState(shuffle)
 
     Nuvola.actions.updateEnabledFlag(ACTION_LIKE, !!elms.like)
-    Nuvola.actions.updateState(ACTION_LIKE, elms.like && elms.like.className.includes('favorite'))
+    Nuvola.actions.updateState(ACTION_LIKE, elms.like && elms.like.getAttribute('aria-checked') === 'true')
 
     setTimeout(this.update.bind(this), 500)
   }
@@ -134,13 +133,6 @@
       case PlayerAction.SHUFFLE:
         Nuvola.clickOnElement(elms.shuffle)
         break
-      case PlayerAction.CHANGE_VOLUME: {
-        // The volume value seems to be accepted only if the range input is set to
-        // a non-integer floating point value so that the handler of "invalid" event is triggered.
-        const volume = Math.round(param * 100) + 0.0001
-        Nuvola.setInputValueWithEvent(elms.volumebar, volume)
-        break
-      }
       case PlayerAction.SEEK: {
         const total = Nuvola.parseTimeUsec(elms.timeTotal)
         if (param > 0 && param <= total) {
@@ -163,13 +155,12 @@
       prev: document.querySelector(PLAYER + ' button[data-test="previous"]'),
       repeat: document.querySelector('button[data-test="repeat"]'),
       shuffle: document.querySelector('button[data-test="shuffle"]'),
+      like: document.querySelector('button[data-test="footer-favorite-button"]'),
       progressbar: document.querySelector(PLAYER + ' div[data-test="interaction-layer"]'),
-      volumebar: document.querySelector('div[class*="volumeSlider"] input'),
-      timeTotal: Nuvola.queryText(PLAYER + ' time[class^=duration]'),
-      timeElapsed: Nuvola.queryText(PLAYER + ' time[class^=currentTime]')
+      timeTotal: Nuvola.queryText(PLAYER + ' time.duration-time'),
+      timeElapsed: Nuvola.queryText(PLAYER + ' time.current-time')
     }
-    const elm = document.querySelector(PLAYER + ' button[data-test="footer-context-menu"]')
-    elms.like = elm ? elm.nextElementSibling : null
+
     // Ignore disabled buttons
     for (const key in elms) {
       if (elms[key] && elms[key].disabled) {
@@ -184,11 +175,11 @@
     if (!elm) {
       return null
     }
-    const classes = elm.getAttribute('class')
-    if (classes.includes('once--')) {
+    const type = elm.getAttribute('data-type')
+    if (type === 'button__repeatSingle') {
       return Nuvola.PlayerRepeat.TRACK
     }
-    return classes.includes('all--') ? Nuvola.PlayerRepeat.PLAYLIST : Nuvola.PlayerRepeat.NONE
+    return type === 'button__repeatAll' ? Nuvola.PlayerRepeat.PLAYLIST : Nuvola.PlayerRepeat.NONE
   }
 
   WebApp._setRepeat = function (repeat) {
@@ -199,7 +190,7 @@
 
   WebApp._getShuffle = function () {
     const elm = this._getElements().shuffle
-    return elm ? elm.getAttribute('class').includes('active--') : null
+    return elm ? elm.getAttribute('aria-checked') === 'true' : null
   }
 
   WebApp.start()
