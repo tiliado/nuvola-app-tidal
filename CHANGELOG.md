@@ -1,6 +1,9 @@
 Tidal Change Log
 ================
 
+1.2 - April 11th, 2021
+----------------------
+
   * Update metadata parsing. Issue: tiliado/nuvolaplayer#721
 
 1.1 - September 28, 2020
