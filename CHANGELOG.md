@@ -1,6 +1,9 @@
 Tidal Change Log
 ================
 
+1.3 - July 31st, 2021
+---------------------
+
   * Deprecate service until Nuvola is ported to a new web engine. Issue: tiliado/nuvolaplayer#745
 
 1.2 - April 11th, 2021
