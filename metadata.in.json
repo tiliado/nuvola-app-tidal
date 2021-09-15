@@ -10,7 +10,7 @@
   "api_minor": 13,
   "categories": "AudioVideo;Audio;",
   "requirements": "Chromium[65] Codec[MP3] Feature[MSE] Feature[Widevine]",
-  "deprecation_url": "https://github.com/tiliado/nuvolaplayer/issues/745",
+  "deprecation_url": "https://github.com/tiliado/nuvolaplayer/issues/764",
   "dark_theme": true,
   "license": "BSD-2-Clause; CC-BY-SA-3.0",
   "build": {
