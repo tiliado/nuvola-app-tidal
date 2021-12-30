@@ -1,6 +1,11 @@
 Tidal Change Log
 ================
 
+1.4 - December 30th, 2021
+-------------------------
+
+  * Change deprecation URL.
+
 1.3 - July 31st, 2021
 ---------------------
 
